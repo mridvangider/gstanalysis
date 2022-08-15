@@ -3,10 +3,9 @@ from pyspark.sql import Column
 from pyspark.sql.functions import upper,split,trim,ascii,substring,substring_index
 from pyspark.sql.types import DecimalType,IntegerType
 import sys
-
+import boto3
 
 spark = SparkSession.builder.config("spark.jars.packages", "mysql:mysql-connector-java:8.0.17").getOrCreate()
-# spark.conf.set('spark.sql.repl.eagerEval.enabled', True)
 degree='°'
 
 if len(sys.argv) != 3:
@@ -16,12 +15,8 @@ if len(sys.argv) != 3:
 dbuser = sys.argv[1]
 dbpass = sys.argv[2]
 
-# df_temps = spark.read.option("header",True).csv("../../data/global_sea_temp/SeaTemperatures.csv")
-# df_temps.show(10)
-
 jdbc_url = 'jdbc:mysql://dbinstance1.cvx8acmkmdhd.eu-central-1.rds.amazonaws.com/dbase1'
 
-# df_temps =  spark.read.jdbc(jdbc_url,'sea_temps',properties={'user':dbuser,'password':dbpass})
 df_temps = spark.read.format("jdbc") \
     .option("url",jdbc_url)\
     .option("driver","com.mysql.jdbc.Driver")\
@@ -64,7 +59,3 @@ df_temps2 = df_temps\
     )
 
 df_temps2.show(10)    
-
-# df_temps.show(10)
-# df_cities.show(10)
-# df_countries.show(10)
