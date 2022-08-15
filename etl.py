@@ -37,6 +37,7 @@ df_cities = spark.read.format("jdbc") \
     .option("user",dbuser)\
     .option("password",dbpass)\
     .load()
+
 df_countries = spark.read.format("jdbc") \
     .option("url",jdbc_url)\
     .option("driver","com.mysql.jdbc.Driver")\
@@ -45,19 +46,25 @@ df_countries = spark.read.format("jdbc") \
     .option("password",dbpass)\
     .load()
 
-# df_temps2 = df_temps.select(
-#     df_temps.City,
-#     substring_index(
-#         split(df_temps.CurrTemp,'/').getItem(0),degree,1
-#     ).cast(DecimalType(4,1)).alias('Temp_C'),
-#     substring_index(
-#         split(df_temps.CurrTemp,'/').getItem(1),degree,1
-#     ).cast(DecimalType(4,1)).alias('Temp_F'),
-#     substring_index(df_temps.WindSpeed,' mph',1).cast('integer').alias('WindSpeed_mph'),
-#     (substring_index(df_temps.Humidity,'%',1).cast('integer') / 100).alias('Humidity')
-# )
-# df_temps2.show(10)    
+df_temps2 = df_temps\
+    .join(df_cities, 'city')\
+    .join(df_countries,'country')\
+    .select(
+        df_countries.continent,
+        df_cities.country,
+        df_temps.city,
+        substring_index(
+            split(df_temps.currtemp,'/').getItem(0),degree,1
+        ).cast(DecimalType(4,1)).alias('Temp_C'),
+        substring_index(
+            split(df_temps.currtemp,'/').getItem(1),degree,1
+        ).cast(DecimalType(4,1)).alias('Temp_F'),
+        substring_index(df_temps.windspeed,' mph',1).cast('integer').alias('WindSpeed_mph'),
+        (substring_index(df_temps.humidity,'%',1).cast('integer') / 100).alias('Humidity')
+    )
 
-df_temps.show(10)
-df_cities.show(10)
-df_countries.show(10)
+df_temps2.show(10)    
+
+# df_temps.show(10)
+# df_cities.show(10)
+# df_countries.show(10)
