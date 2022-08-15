@@ -5,7 +5,7 @@ from pyspark.sql.types import DecimalType,IntegerType
 import sys
 
 
-spark = SparkSession.builder.getOrCreate()
+spark = SparkSession.builder.config("spark.jars.packages", "mysql:mysql-connector-java:8.0.17").getOrCreate()
 # spark.conf.set('spark.sql.repl.eagerEval.enabled', True)
 degree='°'
 
@@ -21,9 +21,29 @@ dbpass = sys.argv[2]
 
 jdbc_url = 'jdbc:mysql://dbinstance1.cvx8acmkmdhd.eu-central-1.rds.amazonaws.com/dbase1'
 
-df_temps = spark.read.jsbc(jdbc_url,'sea_temps',properties={'user':dbuser,'password':dbpass})
-# df_cities = spark.read.jdbc(jdbc_url,'cities')
-# df_countries = spark.read.jdbc(jdbc_url,'countries')
+# df_temps =  spark.read.jdbc(jdbc_url,'sea_temps',properties={'user':dbuser,'password':dbpass})
+df_temps = spark.read.format("jdbc") \
+    .option("url",jdbc_url)\
+    .option("driver","com.mysql.jdbc.Driver")\
+    .option("dbtable","sea_temps")\
+    .option("user",dbuser)\
+    .option("password",dbpass)\
+    .load()
+
+df_cities = spark.read.format("jdbc") \
+    .option("url",jdbc_url)\
+    .option("driver","com.mysql.jdbc.Driver")\
+    .option("dbtable","cities")\
+    .option("user",dbuser)\
+    .option("password",dbpass)\
+    .load()
+df_countries = spark.read.format("jdbc") \
+    .option("url",jdbc_url)\
+    .option("driver","com.mysql.jdbc.Driver")\
+    .option("dbtable","countries")\
+    .option("user",dbuser)\
+    .option("password",dbpass)\
+    .load()
 
 # df_temps2 = df_temps.select(
 #     df_temps.City,
@@ -39,3 +59,5 @@ df_temps = spark.read.jsbc(jdbc_url,'sea_temps',properties={'user':dbuser,'passw
 # df_temps2.show(10)    
 
 df_temps.show(10)
+df_cities.show(10)
+df_countries.show(10)
