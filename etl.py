@@ -32,24 +32,25 @@ def process(temps, cities, countries, output):
             df_temps.City,
             substring_index(split(df_temps.CurrTemp,'/').getItem(0),degree,1)\
                     .cast(DecimalType(4,1))
-                    .alias('temp_c'),
+                    .alias('Temp_C'),
             substring_index(split(df_temps.CurrTemp,'/').getItem(1),degree,1)\
                     .cast(DecimalType(4,1))\
-                    .alias('temp_f'),
+                    .alias('Temp_F'),
             substring_index(df_temps.WindSpeed,' mph',1)\
                     .cast('integer')\
-                    .alias('windspeed_mph'),
+                    .alias('WindSpeed_Mph'),
             substring_index(df_temps.Humidity,'%',1)\
                     .cast('integer')\
-                    .alias('humidity_pct')
+                    .alias('Humidity_pct')
                     )
 
 
     df_out = df_temps_clean\
         .join(df_cities, ['City'])\
         .join(df_countries,['Country'])
+        .select('Continent','Country','City','Temp_C','Temp_F','WindSpeed_Mph','Humidity_pct')
 
-    df_out.write.csv(output)
+    df_out.write.option('header','true').csv(output)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
