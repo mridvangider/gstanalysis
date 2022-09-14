@@ -43,6 +43,7 @@ df_temps_clean = df_temps.select(
         substring_index(df_temps.humidity,'%',1)\
                 .cast(IntegerType)\
                 .alias('humidity_pct')
+                )
 
 df_temps2 = df_temps_clean\
     .join(df_cities, 'city')\  # df_temps_clean.city == df_cities.city
