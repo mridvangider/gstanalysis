@@ -45,8 +45,11 @@ df_temps_clean = df_temps.select(
                 .alias('humidity_pct')
                 )
 
+# df_temps_clean.city == df_cities.city
+# c.country = df_countries.country
+
 df_temps2 = df_temps_clean\
-    .join(df_cities, 'city')\  # df_temps_clean.city == df_cities.city
-    .join(df_countries,'country') # c.country = df_countries.country
+    .join(df_cities, 'city')\
+    .join(df_countries,'country') 
 
 df_temps2.show(10)    
