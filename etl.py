@@ -58,5 +58,6 @@ if __name__ == "__main__":
     parser.add_argument('--countries', help="Countries file")
     parser.add_argument('--output', help="Output file")
 
-    process(temps,cities,countries,output)
+    args = parser.parse_args()
+    process(args.temps,args.cities,args.countries,args.output)
 
