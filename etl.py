@@ -38,10 +38,10 @@ df_temps_clean = df_temps.select(
                 .cast(DecimalType(4,1))\
                 .alias('temp_f'),
         substring_index(df_temps.windspeed,' mph',1)\
-                .cast('integer')\
+                .cast(IntegerType)\
                 .alias('windspeed_mph'),
         substring_index(df_temps.humidity,'%',1)\
-                .cast('integer')\
+                .cast(IntegerType)\
                 .alias('humidity_pct')
 
 df_temps2 = df_temps_clean\
