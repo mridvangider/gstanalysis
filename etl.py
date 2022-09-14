@@ -30,18 +30,18 @@ df_countries = spark.read \
         .csv(f_countries)
 
 df_temps_clean = df_temps.select(
-        df_temps.city,
-        substring_index(split(df_temps.currtemp,'/').getItem(0),degree,1)\
+        df_temps.City,
+        substring_index(split(df_temps.CurrTemp,'/').getItem(0),degree,1)\
                 .cast(DecimalType(4,1))
                 .alias('temp_c'),
-        substring_index(split(df_temps.currtemp,'/').getItem(1),degree,1)\
+        substring_index(split(df_temps.CurrTemp,'/').getItem(1),degree,1)\
                 .cast(DecimalType(4,1))\
                 .alias('temp_f'),
-        substring_index(df_temps.windspeed,' mph',1)\
-                .cast(IntegerType)\
+        substring_index(df_temps.WindSpeed,' mph',1)\
+                .cast('integer')\
                 .alias('windspeed_mph'),
-        substring_index(df_temps.humidity,'%',1)\
-                .cast(IntegerType)\
+        substring_index(df_temps.Humidity,'%',1)\
+                .cast('integer')\
                 .alias('humidity_pct')
                 )
 
