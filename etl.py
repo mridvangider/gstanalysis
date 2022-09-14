@@ -29,6 +29,11 @@ df_countries = spark.read \
         .option("header","true") \
         .csv(f_countries)
 
+df_countries = df_countries.select(
+    trim(df_countries.Continent).alias('Continent'),
+    trim(df_countries.Country).alias('Country')
+)
+
 df_temps_clean = df_temps.select(
         df_temps.City,
         substring_index(split(df_temps.CurrTemp,'/').getItem(0),degree,1)\
@@ -45,11 +50,9 @@ df_temps_clean = df_temps.select(
                 .alias('humidity_pct')
                 )
 
-# df_temps_clean.city == df_cities.city
-# c.country = df_countries.country
 
 df_temps2 = df_temps_clean\
-    .join(df_cities, 'city')\
-    .join(df_countries,'country') 
+    .join(df_cities, ['City'])\
+    .join(df_countries,['Country'])
 
-df_temps2.show(10)    
+df_temps2.show(10) 
