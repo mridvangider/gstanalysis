@@ -1,0 +1,1 @@
+--countries "s3://ridvan-data/data-lake/gst/countries.csv" --cities "s3://ridvan-data/data-lake/gst/cities.csv" --temps "s3://ridvan-data/data-lake/gst/temps.csv" --output "s3://ridvan-data/data-mart/gst"
