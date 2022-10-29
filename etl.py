@@ -46,8 +46,8 @@ def process(temps, cities, countries, output):
 
 
     df_out = df_temps_clean\
-        .join(df_cities, ['City'])\
-        .join(df_countries,['Country'])\
+        .join(df_cities, ['City'],'leftouter')\
+        .join(df_countries,['Country'],'leftouter')\
         .select('Continent','Country','City','Temp_C','Temp_F','WindSpeed_Mph','Humidity_pct')
 
     df_out.write.option('header','true').csv(output)
